@@ -1,6 +1,6 @@
 # WebElixir - CRUD de Productos
 
-Phoenix + PostgreSQL, listo para Railway.
+Phoenix + PostgreSQL, listo para Fly.io.
 
 ## Setup Local
 
@@ -22,29 +22,47 @@ make db.migrate # Ejecutar migraciones
 make db.seed    # Poblar datos de prueba
 ```
 
-## Deploy en Railway
+## Deploy en Fly.io
 
-### Variables de Entorno
+### 1. Instalar CLI
 
-| Variable | Descripción |
-|----------|-------------|
-| `DATABASE_URL` | Railway la genera al agregar PostgreSQL |
-| `SECRET_KEY_BASE` | Generar con `mix phx.gen.secret` |
-| `PHX_HOST` | `tu-app.up.railway.app` |
-| `PORT` | Railway lo asigna automáticamente |
+```bash
+curl -L https://fly.io/install.sh | sh
+```
 
-### Pasos
+### 2. Login y Launch
 
-1. Crear proyecto en Railway
-2. Agregar PostgreSQL desde "Add Service"
-3. Conectar repo de GitHub
-4. Agregar variables de entorno
-5. En Settings > Deploy, configurar:
-   - Build Command: `mix deps.get && mix assets.deploy && mix compile`
-   - Start Command: `mix ecto.migrate && mix phx.server`
+```bash
+fly auth login
+fly launch
+```
 
-### Generar SECRET_KEY_BASE
+Cuando pregunte, acepta crear la base de datos Postgres.
+
+### 3. Configurar SECRET_KEY_BASE
 
 ```bash
 mix phx.gen.secret
+fly secrets set SECRET_KEY_BASE=<tu_secret>
+```
+
+### 4. Deploy
+
+```bash
+fly deploy
+```
+
+### 5. Ejecutar migraciones
+
+```bash
+fly ssh console -C "/app/bin/migrate"
+```
+
+### Comandos útiles
+
+```bash
+fly status      # Ver estado
+fly logs        # Ver logs
+fly ssh console # Conectar al servidor
+fly open        # Abrir app en browser
 ```

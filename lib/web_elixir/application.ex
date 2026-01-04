@@ -8,7 +8,6 @@ defmodule WebElixir.Application do
     children = [
       WebElixirWeb.Telemetry,
       WebElixir.Repo,
-      {DNSCluster, query: Application.get_env(:web_elixir, :dns_cluster_query) || :ignore},
       {Phoenix.PubSub, name: WebElixir.PubSub},
       WebElixirWeb.Endpoint
     ]

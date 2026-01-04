@@ -1,14 +1,51 @@
-<.simple_form :let={f} for={@changeset} action={@action} class="bg-white shadow-md rounded-lg p-6">
+<.simple_form :let={f} for={@changeset} action={@action}>
   <.error :if={@changeset.action}>
-    Oops, algo salió mal. Por favor revisa los errores abajo.
+    <div class="bg-red-500/20 text-red-400 p-4 rounded-xl mb-4">
+      Hay errores en el formulario. Revisa los campos.
+    </div>
   </.error>
 
-  <.input field={f[:name]} type="text" label="Nombre" required />
-  <.input field={f[:description]} type="textarea" label="Descripción" />
-  <.input field={f[:price]} type="number" label="Precio" step="0.01" min="0" required />
-  <.input field={f[:stock]} type="number" label="Stock" min="0" />
+  <div class="space-y-5">
+    <div>
+      <label for="product_name" class="block text-sm font-medium text-gray-300 mb-2">Nombre *</label>
+      <input type="text" name="product[name]" id="product_name" value={Phoenix.HTML.Form.normalize_value("text", f[:name].value)} required
+        class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition"
+        placeholder="Ej: Laptop Pro" />
+      <.error :for={msg <- f[:name].errors}><%= elem(msg, 0) %></.error>
+    </div>
+
+    <div>
+      <label for="product_description" class="block text-sm font-medium text-gray-300 mb-2">Descripción</label>
+      <textarea name="product[description]" id="product_description" rows="3"
+        class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition resize-none"
+        placeholder="Describe el producto..."><%= Phoenix.HTML.Form.normalize_value("textarea", f[:description].value) %></textarea>
+    </div>
+
+    <div class="grid grid-cols-2 gap-4">
+      <div>
+        <label for="product_price" class="block text-sm font-medium text-gray-300 mb-2">Precio *</label>
+        <div class="relative">
+          <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">$</span>
+          <input type="number" name="product[price]" id="product_price" value={f[:price].value} step="0.01" min="0" required
+            class="w-full bg-white/5 border border-white/10 rounded-xl pl-8 pr-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition"
+            placeholder="0.00" />
+        </div>
+        <.error :for={msg <- f[:price].errors}><%= elem(msg, 0) %></.error>
+      </div>
+
+      <div>
+        <label for="product_stock" class="block text-sm font-medium text-gray-300 mb-2">Stock</label>
+        <input type="number" name="product[stock]" id="product_stock" value={f[:stock].value || 0} min="0"
+          class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition"
+          placeholder="0" />
+        <.error :for={msg <- f[:stock].errors}><%= elem(msg, 0) %></.error>
+      </div>
+    </div>
+  </div>
 
   <:actions>
-    <.button class="bg-blue-600 hover:bg-blue-700">Guardar Producto</.button>
+    <button type="submit" class="w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white py-3 rounded-xl font-semibold hover:opacity-90 transition shadow-lg shadow-purple-500/25 mt-6">
+      Guardar Producto
+    </button>
   </:actions>
 </.simple_form>

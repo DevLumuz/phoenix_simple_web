@@ -17,7 +17,7 @@ defmodule WebElixir.Catalog.Product do
     |> cast(attrs, [:name, :description, :price, :stock])
     |> validate_required([:name, :price])
     |> validate_length(:name, min: 2, max: 100)
-    |> validate_number(:price, greater_than: 0)
-    |> validate_number(:stock, greater_than_or_equal_to: 0)
+    |> validate_number(:price, greater_than: 0, less_than: 1_000_000_000)
+    |> validate_number(:stock, greater_than_or_equal_to: 0, less_than: 1_000_000_000)
   end
 end

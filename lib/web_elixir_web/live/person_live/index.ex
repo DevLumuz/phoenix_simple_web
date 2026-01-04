@@ -6,7 +6,12 @@ defmodule WebElixirWeb.PersonLive.Index do
 
   @impl true
   def mount(_params, _session, socket) do
-    {:ok, stream(socket, :people, People.list_people())}
+    people = People.list_people()
+
+    {:ok,
+     socket
+     |> assign(:people_count, length(people))
+     |> stream(:people, people)}
   end
 
   @impl true
@@ -34,7 +39,10 @@ defmodule WebElixirWeb.PersonLive.Index do
 
   @impl true
   def handle_info({WebElixirWeb.PersonLive.FormComponent, {:saved, person}}, socket) do
-    {:noreply, stream_insert(socket, :people, person, at: 0)}
+    {:noreply,
+     socket
+     |> update(:people_count, &(&1 + 1))
+     |> stream_insert(:people, person, at: 0)}
   end
 
   @impl true
@@ -42,6 +50,9 @@ defmodule WebElixirWeb.PersonLive.Index do
     person = People.get_person!(id)
     {:ok, _} = People.delete_person(person)
 
-    {:noreply, stream_delete(socket, :people, person)}
+    {:noreply,
+     socket
+     |> update(:people_count, &(&1 - 1))
+     |> stream_delete(:people, person)}
   end
 end

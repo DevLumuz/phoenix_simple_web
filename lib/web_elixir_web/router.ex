@@ -19,6 +19,10 @@ defmodule WebElixirWeb.Router do
 
     get("/", PageController, :home)
     resources("/products", ProductController)
+
+    live("/people", PersonLive.Index, :index)
+    live("/people/new", PersonLive.Index, :new)
+    live("/people/:id/edit", PersonLive.Index, :edit)
   end
 
   scope "/api", WebElixirWeb do

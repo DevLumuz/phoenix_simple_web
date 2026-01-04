@@ -1,0 +1,14 @@
+<.simple_form :let={f} for={@changeset} action={@action} class="bg-white shadow-md rounded-lg p-6">
+  <.error :if={@changeset.action}>
+    Oops, algo salió mal. Por favor revisa los errores abajo.
+  </.error>
+
+  <.input field={f[:name]} type="text" label="Nombre" required />
+  <.input field={f[:description]} type="textarea" label="Descripción" />
+  <.input field={f[:price]} type="number" label="Precio" step="0.01" min="0" required />
+  <.input field={f[:stock]} type="number" label="Stock" min="0" />
+
+  <:actions>
+    <.button class="bg-blue-600 hover:bg-blue-700">Guardar Producto</.button>
+  </:actions>
+</.simple_form>
